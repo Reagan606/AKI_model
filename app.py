@@ -67,7 +67,7 @@ bun = st.number_input("Blood urea nitrogen(mg/dL):", min_value=0, max_value=100,
 
 albumin = st.number_input("Albumin(g/dL):", min_value=0.0, max_value=10.0, value=2.0, format="%.1f")
 
-chloride= st.number_input("Chloride(mmol/L):", min_value=0, max_value=200, value=60, format="%.0f")
+chloride= st.number_input("Chloride(mmol/L):", min_value=0, max_value=200, value=60)
 
 
 # 确保特征顺序正确
@@ -117,3 +117,4 @@ if st.button("Predict"):
 
 
     st.image("shap_force_plot.png")
+
