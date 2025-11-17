@@ -53,7 +53,7 @@ st.title("Prediction Model for Postoperative Acute Kidney Injury")
 icd10_pcs = st.selectbox("Surgery type:", options=list(icd10_pcs.keys()), format_func=lambda x: icd10_pcs[x])
 
 
-op_time = st.number_input("Operative time(min):", min_value=0, max_value=3000, value=300, format="%.0f")
+op_time = st.number_input("Operative time(min):", min_value=0, max_value=3000, value=300)
 
 creatinine = st.number_input("Creatinine(mg/dL):", min_value=0.00, max_value=6.00, value=3.00, format="%.2f")
 
@@ -63,7 +63,7 @@ sex = st.selectbox("Gender:", options=list(sex.keys()), format_func=lambda x: se
 
 total_bilirubin = st.number_input("Total bilirubin(mg/dL):", min_value=0.0, max_value=10.0, value=3.0, format="%.1f")
 
-bun = st.number_input("Blood urea nitrogen(mg/dL):", min_value=0, max_value=100, value=25, format="%.0f")
+bun = st.number_input("Blood urea nitrogen(mg/dL):", min_value=0, max_value=100, value=25)
 
 albumin = st.number_input("Albumin(g/dL):", min_value=0.0, max_value=10.0, value=2.0, format="%.1f")
 
@@ -114,5 +114,6 @@ if st.button("Predict"):
 
     shap.force_plot(explainer.expected_value, shap_values[0], pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)
     plt.savefig("shap_force_plot.png", bbox_inches='tight', dpi=1200)
+
 
     st.image("shap_force_plot.png")
