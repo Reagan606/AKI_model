@@ -77,27 +77,36 @@ if st.button("Predict"):
         """
     st.markdown(advice)
 
-    # 5. SHAP 可解释性分析
+   # 5. SHAP 可解释性分析 (修复后的版本)
     st.divider()
     st.subheader("Feature Contribution (SHAP Explanation)")
     
     explainer = shap.TreeExplainer(model)
-    # 计算当前样本的 SHAP 值
     shap_val = explainer.shap_values(features)
     
-    # 兼容处理：GBM 等模型在某些版本下返回列表，某些返回数组
+    # 兼容性处理：确定哪些 SHAP 值对应正类 (AKI=1)
     if isinstance(shap_val, list):
-        # 取正类（AKI）对应的 SHAP 值
-        current_shap_values = shap_val[1]
+        current_shap_values = shap_val[1] # 列表结构，通常索引1是正类
     else:
-        current_shap_values = shap_val
+        current_shap_values = shap_val    # 数组结构
+    
+    # 稳健地获取 expected_value
+    # 如果是列表或数组，取索引1；如果是标量，直接使用
+    ev = explainer.expected_value
+    if isinstance(ev, (list, np.ndarray)):
+        if len(ev) > 1:
+            base_value = ev[1]
+        else:
+            base_value = ev[0]
+    else:
+        base_value = ev
 
-    # 绘图
+    # 绘制 force_plot
     fig, ax = plt.subplots()
     shap.force_plot(
-        explainer.expected_value[1] if isinstance(explainer.expected_value, (list, np.ndarray)) else explainer.expected_value,
+        base_value,
         current_shap_values[0],
-        features,
+        features.iloc[0], # 确保传入的是 Series 或单行 DataFrame
         matplotlib=True,
         show=False
     )
